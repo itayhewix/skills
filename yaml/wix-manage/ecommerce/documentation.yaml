@@ -10,3 +10,7 @@ apiDoc:
       title: Setup Store Pickup Location
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [stores, ecommerce]
+    - file: ../../../skills/wix-manage/references/ecommerce/test-skillspr-recipe.md
+      title: "Recipe: Test SkillsPr from ChatGPT"
+      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
+      tags: [ecommerce, test]
