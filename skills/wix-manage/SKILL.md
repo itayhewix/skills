@@ -112,6 +112,15 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 ### [Setup Store Pickup Location](references/ecommerce/setup-store-pickup-location.md)
 **Technical:** Configures a pickup option for an online store so customers can choose in-store pickup at checkout. Uses the Delivery Profiles API to discover the Pickup carrier, add a delivery region, and attach the carrier with a free pickup rate.
 
+### [Flow: Run Flash Sale](references/ecommerce/flow-run-flash-sale.md)
+**Technical:** Orchestrates a time-limited flash sale by creating discount rules, validating against conflicts, and applying visual indicators to selected products. Multi-step L4 flow that references guardrail and config skills.
+
+### [Guardrail: Discount Conflicts](references/ecommerce/guardrail-discount-conflicts.md)
+**Technical:** Validation rules for detecting and preventing discount stacking conflicts, coupon overlap, and unintended deep discounts before applying new promotions.
+
+### [Setup: Discount Rules](references/ecommerce/setup-discount-rules.md)
+**Technical:** Configures automatic discount rules using the eCommerce Discount Rules API. Covers percentage and fixed-amount discounts, scope targeting, and scheduling active periods.
+
 ---
 
 ## Events

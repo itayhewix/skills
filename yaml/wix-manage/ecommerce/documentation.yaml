@@ -10,3 +10,15 @@ apiDoc:
       title: Setup Store Pickup Location
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [stores, ecommerce]
+    - file: ../../../skills/wix-manage/references/ecommerce/flow-run-flash-sale.md
+      title: "Flow: Run Flash Sale"
+      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
+      tags: [ecommerce, discounts]
+    - file: ../../../skills/wix-manage/references/ecommerce/guardrail-discount-conflicts.md
+      title: "Guardrail: Discount Conflicts"
+      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
+      tags: [ecommerce, discounts]
+    - file: ../../../skills/wix-manage/references/ecommerce/setup-discount-rules.md
+      title: "Setup: Discount Rules"
+      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
+      tags: [ecommerce, discounts]
