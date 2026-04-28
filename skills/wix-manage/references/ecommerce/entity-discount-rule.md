@@ -1,11 +1,27 @@
 ---
 name: "Entity: Discount Rule"
-description: Discount rule data model — scope types, discount types, stacking behavior, scheduling, and revision-based updates. Annotates relationships and invariants not explicit in the API docs.
+description: Discount rule data model — automatic discounts vs coupons, scope types, discount types, stacking behavior, scheduling, and revision-based updates.
 layer: L2
 ---
 # Entity: Discount Rule
 
-A discount rule is an automatic promotion that applies at checkout without requiring a coupon code. Understanding the data model's constraints and relationships is critical for avoiding the most common merchant errors.
+Wix eCommerce has two distinct discount mechanisms. Understanding when to use each — and how they interact — is essential before creating any promotion.
+
+---
+
+## Two discount mechanisms
+
+Wix has two ways to give customers a discount. They use different APIs but share similar configuration (scope, discount type, conditions).
+
+| | Automatic Discount | Coupon |
+|---|---|---|
+| **How it works** | Applies at checkout when conditions are met — no customer action needed | Customer must enter a code at checkout |
+| **API** | Discount Rules API | Coupons API |
+| **Stacking** | Stacks with other automatic discounts AND with coupons | Stacks with automatic discounts. Only one coupon per checkout. |
+| **Usage limits** | No per-customer limits | Can set total usage limit and per-customer limit |
+| **Tracking** | No code to track attribution | Code enables source attribution (email, influencer, ad) |
+
+When to use which mechanism is a **flow-level decision** — see the "Recommend: Discount Strategy" skill (Step 4) for the decision logic. This entity describes the data model for both.
 
 ---
 
@@ -53,11 +69,19 @@ All IDs must be valid GUIDs (e.g., `"a1b2c3d4-e5f6-7890-abcd-ef1234567890"`). Ca
 
 This is the single most important invariant that causes merchant mistakes:
 
-- Automatic discount rules **stack with each other**. Two active rules targeting overlapping products combine their discounts.
-- Automatic discount rules **also stack with manual coupon codes**. A customer using a coupon during a sale period receives both discounts.
-- Example: A 20% catalog-wide rule + a 15% collection rule on the same product = combined discount on that product. A customer also applying a 10% coupon code receives all three.
+### Automatic + Automatic
+Multiple automatic discount rules **stack with each other**. Two active rules targeting overlapping products combine their discounts. There is no priority system — all matching rules apply.
 
-**Always query existing active rules before creating new ones.** Warn the merchant about stacking whenever overlapping scopes are detected.
+### Automatic + Coupon
+Automatic discount rules **stack with coupon codes**. A customer using a coupon during an active automatic promotion receives **both** discounts. This is the most common source of unintended deep discounts.
+
+### Coupon + Coupon
+Only **one coupon code** can be used per checkout. If a customer tries a second code, it replaces the first.
+
+### Example
+A 20% catalog-wide automatic rule + a 15% collection automatic rule on the same product = combined discount. A customer also applying a 10% coupon code receives all three → total effective discount far exceeds what the merchant intended.
+
+**Always query both active discount rules AND active coupons before creating new promotions.** Warn the merchant about cross-mechanism stacking whenever overlapping scopes are detected.
 
 ---
 
@@ -106,6 +130,8 @@ This prevents lost updates when multiple clients modify the same rule concurrent
 
 ## References
 
-- [Discount Rules API](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/extensions/discounts/discount-rules/introduction)
+- [Discount Rules API (Automatic Discounts)](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/extensions/discounts/discount-rules/introduction)
 - [Create Discount Rule](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/extensions/discounts/discount-rules/create-discount-rule)
 - [Update Discount Rule](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/extensions/discounts/discount-rules/update-discount-rule)
+- [Coupons API](https://dev.wix.com/docs/api-reference/business-solutions/coupons/introduction)
+- [Create Coupon](https://dev.wix.com/docs/api-reference/business-solutions/coupons/create-coupon)

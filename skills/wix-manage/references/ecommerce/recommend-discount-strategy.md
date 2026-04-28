@@ -84,7 +84,38 @@ Also extract from the merchant's input:
 
 ---
 
-## Step 4: Analyze the catalog
+## Step 4: Determine discount mechanism — Automatic Discount or Coupon
+
+Before analyzing the catalog, decide whether to create an **automatic discount** or a **coupon**. These are two different Wix features with different APIs and behavior.
+
+| Mechanism | How it works | Best for |
+|---|---|---|
+| **Automatic Discount** | Applies at checkout without customer action | Sales, seasonal promotions, upsell thresholds, site-wide discounts |
+| **Coupon** | Requires customer to enter a code | Email campaigns, influencer partnerships, loyalty rewards, targeted offers |
+
+### Decision logic
+
+| Merchant says | Mechanism | Why |
+|---|---|---|
+| "sale", "promotion", "discount for everyone" | Automatic Discount | Applies to all customers |
+| "coupon", "code", "promo code", "voucher" | Coupon | Explicitly requested code-based |
+| "discount for subscribers", "influencer code", "loyalty reward" | Coupon | Needs attribution or audience targeting |
+| "20% off electronics" (no code/coupon mention) | **Ask the merchant** | Intent is ambiguous |
+
+**If intent is unclear, ask**: "Would you like this to apply automatically to everyone at checkout, or as a coupon code that customers enter? Automatic discounts are great for site-wide sales; coupons work better for targeted campaigns where you want to track which channel drove the purchase."
+
+### Impact on recommendations
+
+- If **Automatic Discount**: Use the Discount Rules API. Set `advice.action` to `apply_discount`. Include in `advice.params`: `mechanism: "AUTOMATIC"`.
+- If **Coupon**: Use the Coupons API. Set `advice.action` to `apply_coupon`. Include in `advice.params`: `mechanism: "COUPON"`, plus `code` (suggested coupon code), `usageLimit` (total uses), and `limitPerCustomer`.
+
+### Stacking warning
+
+If the store already has active automatic discounts AND you're creating a coupon (or vice versa), warn the merchant: "You have active automatic discounts. A coupon will stack on top of them — customers using the code will get both discounts applied."
+
+---
+
+## Step 5: Analyze the catalog
 
 Run these two calls **concurrently** (in parallel):
 
@@ -115,7 +146,7 @@ Pass `keywords` to the `query` parameter and `categorySuggestions` to `categoryN
 
 ---
 
-## Step 5: Generate up to 3 recommendations
+## Step 6: Generate up to 3 recommendations
 
 Generate **up to 3 recommendations**. Each one MUST use a **different strategy** — do not repeat the same approach.
 
@@ -156,15 +187,16 @@ When data is sparse (few orders, limited analytics):
 
 ---
 
-## Step 6: Validate before returning
+## Step 7: Validate before returning
 
 Before finalizing, run these checks on each recommendation:
 
-1. **Conflict check**: Query active discount rules. If any existing rule targets the same scope (same category, same products, or catalog-wide), warn about stacking risk.
+1. **Conflict check**: Query both active discount rules AND active coupons. If any existing promotion targets the same scope, warn about stacking risk — especially cross-mechanism stacking (automatic + coupon).
 2. **Margin check**: No recommendation should exceed the discountMargin cap (default 25%) unless the merchant explicitly asked for a higher value.
 3. **Strategy uniqueness**: Each of the 3 recommendations must use a different strategy type.
-4. **ID validity**: All category IDs must be GUIDs from `getCategoryIds`, not category names. All product IDs must come from `getProductCatalogData`.
-5. **Discount values**: Round to clean increments (5%, 10%, 15%, 20%, 25%) unless the merchant specified an exact value.
+4. **Mechanism consistency**: Verify the mechanism (automatic/coupon) matches the merchant's intent from Step 4.
+5. **ID validity**: All category IDs must be GUIDs from `getCategoryIds`, not category names. All product IDs must come from `getProductCatalogData`.
+6. **Discount values**: Round to clean increments (5%, 10%, 15%, 20%, 25%) unless the merchant specified an exact value.
 
 ---
 
@@ -183,6 +215,7 @@ Return a JSON object with a `recommendations` array. Each recommendation follows
       "advice": {
         "action": "apply_discount",
         "params": {
+          "mechanism": "AUTOMATIC | COUPON",
           "scope": "SITE | CATEGORY | ITEMS",
           "categoryIds": [],
           "productIds": [],
@@ -190,6 +223,9 @@ Return a JSON object with a `recommendations` array. Each recommendation follows
           "why": "Rewards orders above your $165 average with 15% off, driving higher cart values.",
           "discountType": "PERCENTAGE",
           "discount": 15,
+          "code": "",
+          "usageLimit": 0,
+          "limitPerCustomer": 0,
           "conditions": {
             "minItemQuantity": 0,
             "minSubTotal": 200,
@@ -214,8 +250,12 @@ Return a JSON object with a `recommendations` array. Each recommendation follows
 | `urgency` | `HIGH` (merchant explicitly asked, or high-revenue store), `MEDIUM` (good opportunity), `LOW` (optimization) |
 | `name` | Marketing headline, 2-5 words. **Translate to the site's `language`** if not English. |
 | `why` | 1-2 sentences explaining the business opportunity. Include specific data points (AOV, margin %, stock levels). **Translate to the site's `language`** if not English. |
+| `mechanism` | `AUTOMATIC` (Discount Rules API) or `COUPON` (Coupons API). Determined in Step 4. |
 | `discountType` | `PERCENTAGE`, `FIXED_AMOUNT`, or `FIXED_PRICE` |
 | `discount` | Integer for percentage (1-100), decimal string for fixed amounts |
+| `code` | Coupon code string. Only for `mechanism: "COUPON"`. Empty string for automatic. Suggest a memorable, brand-relevant code (e.g., "SUMMER25", "SAVE15"). |
+| `usageLimit` | Total number of times the coupon can be used. Only for coupons. `0` = unlimited. |
+| `limitPerCustomer` | Max uses per customer. Only for coupons. `0` = unlimited. |
 | `conditions` | Set to `0` or `""` for fields that don't apply to this recommendation |
 | `scope` + IDs | Mutually exclusive: SITE = both empty, CATEGORY = categoryIds only (max 3), ITEMS = productIds only (max 5) |
 

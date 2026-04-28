@@ -67,6 +67,7 @@ flowchart TB
         subgraph L3D["Discount Config"]
             setup-discount-rules
             setup-discount-constraints
+            setup-coupons
         end
         subgraph L3S["Shipping Config"]
             setup-shipping-regions
@@ -118,7 +119,7 @@ flowchart TB
     class goal-increase-aov,goal-clear-inventory,goal-seasonal-revenue,goal-drive-cross-sells,goal-reduce-cart-abandonment l6
     class guardrail-discount-conflicts,guardrail-margin-protection,troubleshoot-discount-not-applying,guardrail-shipping-health,guardrail-rate-pricing-sanity,troubleshoot-checkout-delivery-dropoff l5
     class flow-upsell-boost,flow-bundle-and-save,flow-stock-mover,flow-seasonal-promotion,flow-fix-coverage-gaps,flow-add-free-shipping,flow-optimize-shipping-rates l4
-    class setup-discount-rules,setup-discount-constraints,setup-shipping-regions,setup-shipping-rates l3
+    class setup-discount-rules,setup-discount-constraints,setup-coupons,setup-shipping-regions,setup-shipping-rates l3
     class entity-discount-rule,entity-product-discount-context,entity-delivery-profile,entity-shipping-option,entity-site-metrics l2
     class api-discount-rules,api-products-v3,api-catalog-analytics,api-categories,api-ribbons,api-delivery-profiles,api-shipping-options,api-pickup-locations,api-local-delivery,api-site-data l1
     class recommend-discount-strategy,recommend-shipping-health reco

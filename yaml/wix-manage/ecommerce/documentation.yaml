@@ -10,7 +10,7 @@ apiDoc:
       title: Setup Store Pickup Location
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [stores, ecommerce]
-- file: ../../../skills/wix-manage/references/ecommerce/guardrail-discount-conflicts.md
+    - file: ../../../skills/wix-manage/references/ecommerce/guardrail-discount-conflicts.md
       title: "Guardrail: Discount Conflicts"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts]
@@ -44,6 +44,10 @@ apiDoc:
       title: "Setup: Discount Constraints"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts]
+    - file: ../../../skills/wix-manage/references/ecommerce/setup-coupons.md
+      title: "Setup: Coupons"
+      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/coupons
+      tags: [ecommerce, discounts, coupons]
     - file: ../../../skills/wix-manage/references/ecommerce/setup-shipping-regions.md
       title: "Setup: Shipping Regions"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce

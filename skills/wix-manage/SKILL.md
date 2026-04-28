@@ -140,6 +140,9 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 ### [Setup: Discount Constraints](references/ecommerce/setup-discount-constraints.md)
 **Technical:** Constraint system for discount rules — margin requirements (15%), global discount cap (25%), scope mutual exclusivity, ID format validation, and user input override protocol.
 
+### [Setup: Coupons](references/ecommerce/setup-coupons.md)
+**Technical:** Creates coupon codes using Coupons V2 API. Covers coupon types (percentage, fixed amount, fixed price, free shipping), scope targeting (all products, collection, specific product), usage limits, and the mapping from recommendation JSON to coupon API payloads.
+
 ### [Setup: Shipping Regions](references/ecommerce/setup-shipping-regions.md)
 **Technical:** Delivery profile and region configuration — creating profiles, adding regions with destinations, assigning carriers, enabling backup rates, and the mandatory perishable goods filter for international shipping.
 

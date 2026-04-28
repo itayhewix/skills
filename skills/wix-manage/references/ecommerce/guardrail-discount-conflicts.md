@@ -7,7 +7,7 @@ layer: L5
 
 ## When to use this guardrail
 
-Run these checks **before** creating or updating any discount rule. Discount conflicts are one of the most common merchant mistakes — two overlapping discounts can silently stack and give customers a much deeper discount than intended.
+Run these checks **before** creating or updating any discount — whether automatic discount rule or coupon. Discount conflicts are one of the most common merchant mistakes — overlapping discounts silently stack and give customers a much deeper discount than intended. This is especially dangerous when **automatic discounts and coupons interact**, since merchants often forget that both mechanisms apply simultaneously.
 
 ---
 
@@ -69,15 +69,18 @@ Run these checks **before** creating or updating any discount rule. Discount con
 
 ---
 
-## Check 4: Coupon interaction
+## Check 4: Cross-mechanism stacking (Automatic + Coupon)
 
-**Why:** Coupons (manual codes) and automatic discount rules can stack. A customer with a 20% coupon code buying during a 20% automatic sale gets ~36% off total.
+**Why:** Automatic discounts and coupons stack with each other at checkout. A customer with a 20% coupon buying during a 20% automatic sale gets both applied — the effective discount is much deeper than either one alone. This is the most commonly overlooked stacking issue.
 
 **How to check:**
 
-1. Query active coupons (if available via API)
-2. If coupons exist that target the same products/collections as the new discount rule, warn:
-   > "There are active coupon codes that apply to the same products. Customers using these coupons during the sale will get both the coupon discount and the automatic discount stacked."
+1. If you are creating an **automatic discount**: Query active coupons that target overlapping products/collections.
+2. If you are creating a **coupon**: Query active automatic discount rules that target overlapping products/collections.
+3. If overlap found, warn the merchant with the combined impact:
+   > "You have an active {automatic discount / coupon} '{name}' ({X}% off) that applies to the same products. If you create this {coupon / automatic discount}, customers will get BOTH discounts — a combined effective discount of approximately {combined}%. Is this intentional?"
+
+**Key rule:** Only one coupon can be used per checkout, but automatic discounts have no such limit. The worst case is: multiple automatic discounts + one coupon all stacking on the same product.
 
 ---
 
@@ -95,13 +98,14 @@ Run these checks **before** creating or updating any discount rule. Discount con
 
 | Scenario | Action |
 |---|---|
-| No conflicts found | Proceed with creating the discount rule |
-| Scope overlap with existing active rule | Warn merchant, ask to deactivate existing or confirm stacking |
+| No conflicts found | Proceed with creating the discount |
+| Scope overlap with existing active automatic discount | Warn merchant, ask to deactivate existing or confirm stacking |
+| Cross-mechanism stacking (automatic + coupon on same scope) | Warn merchant with combined effective discount percentage |
 | Discount > 50% | Warn merchant, ask for confirmation |
 | Discount = 100% | Block unless explicitly confirmed |
 | Time overlap on same scope | Warn about overlap period |
-| Coupon stacking risk | Inform merchant about potential stacking |
 
 ## References
 
-- [Discount Rules API](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/extensions/discounts/discount-rules/introduction)
+- [Discount Rules API (Automatic Discounts)](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/extensions/discounts/discount-rules/introduction)
+- [Coupons API](https://dev.wix.com/docs/api-reference/business-solutions/coupons/introduction)
