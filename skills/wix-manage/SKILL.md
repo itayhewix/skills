@@ -112,14 +112,106 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 ### [Setup Store Pickup Location](references/ecommerce/setup-store-pickup-location.md)
 **Technical:** Configures a pickup option for an online store so customers can choose in-store pickup at checkout. Uses the Delivery Profiles API to discover the Pickup carrier, add a delivery region, and attach the carrier with a free pickup rate.
 
-### [Flow: Run Flash Sale](references/ecommerce/flow-run-flash-sale.md)
-**Technical:** Orchestrates a time-limited flash sale by creating discount rules, validating against conflicts, and applying visual indicators to selected products. Multi-step L4 flow that references guardrail and config skills.
-
 ### [Guardrail: Discount Conflicts](references/ecommerce/guardrail-discount-conflicts.md)
 **Technical:** Validation rules for detecting and preventing discount stacking conflicts, coupon overlap, and unintended deep discounts before applying new promotions.
 
 ### [Setup: Discount Rules](references/ecommerce/setup-discount-rules.md)
 **Technical:** Configures automatic discount rules using the eCommerce Discount Rules API. Covers percentage and fixed-amount discounts, scope targeting, and scheduling active periods.
+
+#### L2 — Domain Entity Skills
+
+### [Entity: Discount Rule](references/ecommerce/entity-discount-rule.md)
+**Technical:** Discount rule data model — scope types (CATALOG/COLLECTION/SPECIFIC_PRODUCTS), discount types, stacking behavior, scheduling, and revision-based updates.
+
+### [Entity: Product Discount Context](references/ecommerce/entity-product-discount-context.md)
+**Technical:** How products relate to discounts — margin data, pricing quantiles, inventory velocity, category membership, and tool parameterization per business goal.
+
+### [Entity: Delivery Profile](references/ecommerce/entity-delivery-profile.md)
+**Technical:** Delivery profile hierarchy (Profile→Region→Carrier), active/inactive states, external vs Wix-managed carriers (Shippo detection), backup rates, and destination rules.
+
+### [Entity: Shipping Option](references/ecommerce/entity-shipping-option.md)
+**Technical:** Shipping option data model — rate structure types (flat/tiered/free), condition logic, multiplyByQuantity anti-pattern, region linkage, and orphaned option detection.
+
+### [Entity: Site Metrics](references/ecommerce/entity-site-metrics.md)
+**Technical:** Site-level business metrics — AOV sanity checking against catalog quantiles, effective AOV derivation, delivery step conversion (65% benchmark), and revenue impact calculation.
+
+#### L3 — Configuration & Setup Skills
+
+### [Setup: Discount Constraints](references/ecommerce/setup-discount-constraints.md)
+**Technical:** Constraint system for discount rules — margin requirements (15%), global discount cap (25%), scope mutual exclusivity, ID format validation, and user input override protocol.
+
+### [Setup: Shipping Regions](references/ecommerce/setup-shipping-regions.md)
+**Technical:** Delivery profile and region configuration — creating profiles, adding regions with destinations, assigning carriers, enabling backup rates, and the mandatory perishable goods filter for international shipping.
+
+### [Setup: Shipping Rates](references/ecommerce/setup-shipping-rates.md)
+**Technical:** Shipping rate configuration — rate types (flat/tiered/free), condition operators, free shipping threshold calibration using AOV and catalog stats, per-item penalty avoidance, and tier gap detection.
+
+#### L4 — Business Flow Skills (Discount)
+
+### [Flow: Upsell Boost Campaign](references/ecommerce/flow-upsell-boost.md)
+**Technical:** Creates discount campaigns to increase AOV using margin-based discount tiers (low/med/high) and minSubTotal conditions. UPSELL_BOOST goal from the discount recommendation pipeline.
+
+### [Flow: Bundle & Save Campaign](references/ecommerce/flow-bundle-and-save.md)
+**Technical:** Creates discount campaigns promoting cross-selling with minItemQuantity conditions. Targets high-margin categories with complementary products. BUNDLE_AND_SAVE goal.
+
+### [Flow: Stock Mover Clearance](references/ecommerce/flow-stock-mover.md)
+**Technical:** Creates clearance discount campaigns targeting products with high stock and low sales velocity. Discount depth proportional to inventory urgency. STOCK_MOVER goal.
+
+### [Flow: Seasonal Promotion](references/ecommerce/flow-seasonal-promotion.md)
+**Technical:** Creates event-driven promotional campaigns tied to holidays. Calculates optimal campaign windows (3-5 days before, 1-3 after) using country and date context. SEASONAL goal.
+
+#### L4 — Business Flow Skills (Shipping)
+
+### [Flow: Fix Shipping Coverage Gaps](references/ecommerce/flow-fix-coverage-gaps.md)
+**Technical:** Detects active delivery regions with zero shipping options and creates standard shipping. Cross-references delivery profiles with shipping options to find checkout-blocking gaps.
+
+### [Flow: Add Free Shipping](references/ecommerce/flow-add-free-shipping.md)
+**Technical:** Creates a free shipping option with an AOV-calibrated threshold. Validates threshold against catalog price distribution using enhanced calibration with p75/p90 quantiles.
+
+### [Flow: Optimize Shipping Rates](references/ecommerce/flow-optimize-shipping-rates.md)
+**Technical:** Analyzes catalog price distribution to recommend optimal rate strategy. Handles flat-to-tiered conversion when price spread is high, tier gap detection, and per-item penalty removal.
+
+#### L5 — Troubleshooting & Guardrails
+
+### [Guardrail: Margin Protection](references/ecommerce/guardrail-margin-protection.md)
+**Technical:** Safety constraints for discount percentages — global cap (25%), minimum margin (15%), percentage sanity checks (>50% warn, =100% block), and user input override protocol.
+
+### [Troubleshoot: Discount Not Applying](references/ecommerce/troubleshoot-discount-not-applying.md)
+**Technical:** Diagnostic tree for inactive discounts — checks active status, time window, scope targeting (GUID validation), revision mismatch, app installation, and stacking interference.
+
+### [Guardrail: Shipping Health](references/ecommerce/guardrail-shipping-health.md)
+**Technical:** Shipping health score (CRITICAL/POOR/FAIR/GOOD/EXCELLENT) with exact scoring criteria. Includes mandatory business context filter blocking international recommendations for perishable goods.
+
+### [Guardrail: Rate Pricing Sanity](references/ecommerce/guardrail-rate-pricing-sanity.md)
+**Technical:** Validates shipping rate pricing — flags excessive rates (>15% AOV), per-item penalties, unreachable free thresholds (>2x AOV), backup rate sticker shock, and hidden surcharges.
+
+### [Troubleshoot: Checkout Delivery Drop-off](references/ecommerce/troubleshoot-checkout-delivery-dropoff.md)
+**Technical:** Diagnostic tree for delivery step conversion below 65% benchmark. Correlates shipping issues with abandonment and calculates revenue impact with high-traffic amplifier.
+
+#### L6 — Business Goals & KPI Skills
+
+### [Goal: Increase Average Order Value](references/ecommerce/goal-increase-aov.md)
+**Technical:** UPSELL_BOOST business goal — maps to AOV KPIs and upsell/bundle flows with margin-based discount tiers and minSubTotal strategy.
+
+### [Goal: Clear Slow-Moving Inventory](references/ecommerce/goal-clear-inventory.md)
+**Technical:** STOCK_MOVER business goal — maps to inventory turnover KPIs and clearance discount flows targeting high-stock/low-velocity products.
+
+### [Goal: Capitalize on Seasonal Events](references/ecommerce/goal-seasonal-revenue.md)
+**Technical:** SEASONAL business goal — maps to event-driven revenue KPIs with proactive holiday detection within 30 days and campaign window calculation.
+
+### [Goal: Drive Cross-Sells and Product Discovery](references/ecommerce/goal-drive-cross-sells.md)
+**Technical:** BUNDLE_AND_SAVE business goal — maps to items-per-order KPIs and bundling flows promoting product discovery and multi-item purchases.
+
+### [Goal: Reduce Cart Abandonment](references/ecommerce/goal-reduce-cart-abandonment.md)
+**Technical:** Maps checkout abandonment to delivery step conversion (65% benchmark) and shipping optimization flows — free shipping, coverage gaps, and rate optimization.
+
+#### R — Recommendation Orchestration
+
+### [Recommend: Discount Strategy](references/ecommerce/recommend-discount-strategy.md)
+**Technical:** Proactive discount recommendation orchestration — 2-agent pipeline that gathers site data, classifies into 4 business goals, runs catalog analytics, and generates up to 3 recommendations across different strategies.
+
+### [Recommend: Shipping Health](references/ecommerce/recommend-shipping-health.md)
+**Technical:** Proactive shipping health audit — analyzes delivery profiles, shipping options, and site metrics. Computes health score, runs 7 configurable rule categories, generates max 5 prioritized recommendations.
 
 ---
 
