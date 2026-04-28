@@ -9,9 +9,6 @@ references:
   - name: "Setup: Shipping Rates"
     url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-shipping-rates
     load: true
-  - name: "Entity: Shipping Option"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/entity-shipping-option
-    load: false
 ---
 # Flow: Optimize Shipping Rates
 

@@ -1,6 +1,6 @@
 ---
 name: "eCommerce Skill Graph"
-description: Mermaid diagram showing how all layered eCommerce skills (L1-L6 + R) connect across discount and shipping domains.
+description: Mermaid diagram showing how all layered eCommerce skills (L3-L6 + R) connect across discount and shipping domains, with conceptual API doc references.
 ---
 
 ## Skill Graph Diagram
@@ -66,8 +66,8 @@ flowchart TB
     subgraph L3["L3 — Configuration & Setup"]
         subgraph L3D["Discount Config"]
             setup-discount-rules
-            setup-discount-constraints
             setup-coupons
+            api-discount-recommendations
         end
         subgraph L3S["Shipping Config"]
             setup-shipping-regions
@@ -75,52 +75,36 @@ flowchart TB
         end
     end
 
-    L3 --> |operates on| L2
+    L3 -.-> |"calls via ReadFullDocsArticle"| API
 
-    subgraph L2["L2 — Domain Entities"]
-        subgraph L2D["Discount"]
-            entity-discount-rule
-            entity-product-discount-context
+    subgraph API["Wix REST API Docs (dev.wix.com)"]
+        subgraph APID["Discount APIs"]
+            D1["Discount Rules API"]
+            D2["Coupons API"]
+            D3["Products V3 API"]
+            D4["Categories API"]
+            D5["Catalog Analytics"]
         end
-        subgraph L2S["Shipping"]
-            entity-delivery-profile
-            entity-shipping-option
+        subgraph APIS["Shipping APIs"]
+            S1["Delivery Profiles API"]
+            S2["Shipping Options API"]
+            S3["Pickup Locations API"]
+            S4["Local Delivery API"]
         end
-        entity-site-metrics
-    end
-
-    L2 --> |calls| L1
-
-    subgraph L1["L1 — API Skills"]
-        subgraph L1D["Discount APIs"]
-            api-discount-rules
-            api-products-v3
-            api-catalog-analytics
-            api-categories
-            api-ribbons
-        end
-        subgraph L1S["Shipping APIs"]
-            api-delivery-profiles
-            api-shipping-options
-            api-pickup-locations
-            api-local-delivery
-        end
-        api-site-data
+        SD["Site Data API"]
     end
 
     classDef l6 fill:#8b5cf6,stroke:#6d28d9,color:#fff
     classDef l5 fill:#ef4444,stroke:#dc2626,color:#fff
     classDef l4 fill:#3b82f6,stroke:#2563eb,color:#fff
     classDef l3 fill:#f59e0b,stroke:#d97706,color:#fff
-    classDef l2 fill:#10b981,stroke:#059669,color:#fff
-    classDef l1 fill:#6b7280,stroke:#4b5563,color:#fff
     classDef reco fill:#ec4899,stroke:#db2777,color:#fff
+    classDef apidoc fill:#e5e7eb,stroke:#9ca3af,color:#374151
 
     class goal-increase-aov,goal-clear-inventory,goal-seasonal-revenue,goal-drive-cross-sells,goal-reduce-cart-abandonment l6
     class guardrail-discount-conflicts,guardrail-margin-protection,troubleshoot-discount-not-applying,guardrail-shipping-health,guardrail-rate-pricing-sanity,troubleshoot-checkout-delivery-dropoff l5
     class flow-upsell-boost,flow-bundle-and-save,flow-stock-mover,flow-seasonal-promotion,flow-fix-coverage-gaps,flow-add-free-shipping,flow-optimize-shipping-rates l4
-    class setup-discount-rules,setup-discount-constraints,setup-coupons,setup-shipping-regions,setup-shipping-rates l3
-    class entity-discount-rule,entity-product-discount-context,entity-delivery-profile,entity-shipping-option,entity-site-metrics l2
-    class api-discount-rules,api-products-v3,api-catalog-analytics,api-categories,api-ribbons,api-delivery-profiles,api-shipping-options,api-pickup-locations,api-local-delivery,api-site-data l1
+    class setup-discount-rules,setup-coupons,api-discount-recommendations,setup-shipping-regions,setup-shipping-rates l3
     class recommend-discount-strategy,recommend-shipping-health reco
+    class D1,D2,D3,D4,D5,S1,S2,S3,S4,SD apidoc
 ```

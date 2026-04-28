@@ -9,12 +9,6 @@ references:
   - name: "Setup: Shipping Regions"
     url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-shipping-regions
     load: true
-  - name: "Entity: Delivery Profile"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/entity-delivery-profile
-    load: false
-  - name: "Entity: Shipping Option"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/entity-shipping-option
-    load: false
 ---
 # Flow: Fix Shipping Coverage Gaps
 

@@ -1,9 +1,27 @@
 ---
 name: "Setup: Shipping Rates"
-description: Configures shipping option rates — rate types (flat, tiered, free), condition types and operators, free shipping threshold calibration, per-item penalty avoidance, and tier gap detection.
+description: Configures shipping option rates — rate types (flat, tiered, free), condition types and operators, free shipping threshold calibration, AOV sanity check, per-item penalty avoidance, and tier gap detection.
 layer: L3
 ---
 # Shipping Rates
+
+## AOV Sanity Check
+
+**MANDATORY before any threshold calculation that references AOV.** Raw AOV can be misleading due to data issues or bulk purchases.
+
+1. Extract `price_p25` and `price_p50` from `catalog_stats` (use the "All Products" category group).
+
+2. Evaluate AOV against catalog price distribution:
+
+| Condition | Interpretation | Action |
+|---|---|---|
+| AOV < price_p25 | Anomalous — likely a data or unit issue | Override: use `price_p50` as base. Note in reasoning. |
+| AOV > price_p90 | Possible bulk/combo orders | Still use AOV but note discrepancy. |
+| price_p25 <= AOV <= price_p90 | Reasonable | Use AOV as-is. |
+
+3. Store the result as `effective_aov`. Use `effective_aov` everywhere AOV would be referenced — backup rate calibration, shipping thresholds, free shipping thresholds.
+
+---
 
 ## Rate Types
 

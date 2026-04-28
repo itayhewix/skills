@@ -118,27 +118,10 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 ### [Setup: Discount Rules](references/ecommerce/setup-discount-rules.md)
 **Technical:** Configures automatic discount rules using the eCommerce Discount Rules API. Covers percentage and fixed-amount discounts, scope targeting, and scheduling active periods.
 
-#### L2 — Domain Entity Skills
-
-### [Entity: Discount Rule](references/ecommerce/entity-discount-rule.md)
-**Technical:** Discount rule data model — scope types (CATALOG/COLLECTION/SPECIFIC_PRODUCTS), discount types, stacking behavior, scheduling, and revision-based updates.
-
-### [Entity: Product Discount Context](references/ecommerce/entity-product-discount-context.md)
-**Technical:** How products relate to discounts — margin data, pricing quantiles, inventory velocity, category membership, and tool parameterization per business goal.
-
-### [Entity: Delivery Profile](references/ecommerce/entity-delivery-profile.md)
-**Technical:** Delivery profile hierarchy (Profile→Region→Carrier), active/inactive states, external vs Wix-managed carriers (Shippo detection), backup rates, and destination rules.
-
-### [Entity: Shipping Option](references/ecommerce/entity-shipping-option.md)
-**Technical:** Shipping option data model — rate structure types (flat/tiered/free), condition logic, multiplyByQuantity anti-pattern, region linkage, and orphaned option detection.
-
-### [Entity: Site Metrics](references/ecommerce/entity-site-metrics.md)
-**Technical:** Site-level business metrics — AOV sanity checking against catalog quantiles, effective AOV derivation, delivery step conversion (65% benchmark), and revenue impact calculation.
-
 #### L3 — Configuration & Setup Skills
 
-### [Setup: Discount Constraints](references/ecommerce/setup-discount-constraints.md)
-**Technical:** Constraint system for discount rules — margin requirements (15%), global discount cap (25%), scope mutual exclusivity, ID format validation, and user input override protocol.
+### [API: Discount Recommendations Service](references/ecommerce/api-discount-recommendations.md)
+**Technical:** Internal API for gathering site data, catalog analytics, product catalog data, and category IDs. Endpoints at manage.wix.com/recommendations. Documents GetSiteData, GetCatalogAnalytics, GetProductCatalogData, and GetCategoryIds with full request/response schemas.
 
 ### [Setup: Coupons](references/ecommerce/setup-coupons.md)
 **Technical:** Creates coupon codes using Coupons V2 API. Covers coupon types (percentage, fixed amount, fixed price, free shipping), scope targeting (all products, collection, specific product), usage limits, and the mapping from recommendation JSON to coupon API payloads.

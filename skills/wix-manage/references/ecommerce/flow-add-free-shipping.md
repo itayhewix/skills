@@ -9,9 +9,6 @@ references:
   - name: "Setup: Shipping Rates"
     url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-shipping-rates
     load: true
-  - name: "Entity: Site Metrics"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/entity-site-metrics
-    load: false
 ---
 # Flow: Add Free Shipping
 

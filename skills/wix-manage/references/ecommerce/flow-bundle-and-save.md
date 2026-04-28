@@ -9,9 +9,6 @@ references:
   - name: "Setup: Discount Rules"
     url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-discount-rules
     load: true
-  - name: "Entity: Product Discount Context"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/entity-product-discount-context
-    load: false
 ---
 # Flow: Bundle & Save Campaign
 

@@ -18,32 +18,11 @@ apiDoc:
       title: "Setup: Discount Rules"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts]
-    # L2 — Domain Entity Skills
-    - file: ../../../skills/wix-manage/references/ecommerce/entity-discount-rule.md
-      title: "Entity: Discount Rule"
-      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
-      tags: [ecommerce, discounts, entity]
-    - file: ../../../skills/wix-manage/references/ecommerce/entity-product-discount-context.md
-      title: "Entity: Product Discount Context"
-      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
-      tags: [ecommerce, discounts, entity]
-    - file: ../../../skills/wix-manage/references/ecommerce/entity-delivery-profile.md
-      title: "Entity: Delivery Profile"
-      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
-      tags: [ecommerce, shipping, entity]
-    - file: ../../../skills/wix-manage/references/ecommerce/entity-shipping-option.md
-      title: "Entity: Shipping Option"
-      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
-      tags: [ecommerce, shipping, entity]
-    - file: ../../../skills/wix-manage/references/ecommerce/entity-site-metrics.md
-      title: "Entity: Site Metrics"
-      docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
-      tags: [ecommerce, entity]
     # L3 — Configuration & Setup Skills
-    - file: ../../../skills/wix-manage/references/ecommerce/setup-discount-constraints.md
-      title: "Setup: Discount Constraints"
+    - file: ../../../skills/wix-manage/references/ecommerce/api-discount-recommendations.md
+      title: "API: Discount Recommendations Service"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
-      tags: [ecommerce, discounts]
+      tags: [ecommerce, discounts, api]
     - file: ../../../skills/wix-manage/references/ecommerce/setup-coupons.md
       title: "Setup: Coupons"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/coupons
