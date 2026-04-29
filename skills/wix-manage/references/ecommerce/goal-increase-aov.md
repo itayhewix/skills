@@ -4,13 +4,13 @@ description: Maps the UPSELL_BOOST business goal to measurable KPIs and actionab
 layer: L6
 references:
   - name: "Flow: Upsell Boost Campaign"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-upsell-boost
+    path: ecommerce/flow-upsell-boost.md
     load: true
   - name: "Flow: Bundle & Save Campaign"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-bundle-and-save
+    path: ecommerce/flow-bundle-and-save.md
     load: true
   - name: "Guardrail: Margin Protection"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-margin-protection
+    path: ecommerce/guardrail-margin-protection.md
     load: false
 ---
 # Goal: Increase Average Order Value

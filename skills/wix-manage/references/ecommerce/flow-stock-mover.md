@@ -4,13 +4,13 @@ description: Creates discount campaigns to clear slow-moving inventory by target
 layer: L4
 references:
   - name: "Guardrail: Discount Conflicts"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-discount-conflicts
+    path: ecommerce/guardrail-discount-conflicts.md
     load: true
   - name: "Guardrail: Margin Protection"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-margin-protection
+    path: ecommerce/guardrail-margin-protection.md
     load: true
   - name: "Setup: Discount Rules"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-discount-rules
+    path: ecommerce/setup-discount-rules.md
     load: true
 ---
 # Flow: Stock Mover Clearance

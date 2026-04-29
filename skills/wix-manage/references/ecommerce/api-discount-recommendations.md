@@ -11,6 +11,21 @@ This service provides data-gathering tools used by the discount recommendation f
 
 **Permission**: `ecom:discounts_recommendations:v1:recommendation:build_recommendation`
 
+## How to call these APIs
+
+These endpoints are **not** directly callable as MCP tools. You must use `CallWixSiteAPI` to invoke them:
+
+```
+CallWixSiteAPI(
+  url: "https://manage.wix.com/recommendations/v1/recommendations/<endpoint>",
+  method: "POST",
+  siteId: "<siteId>",
+  body: { ... }
+)
+```
+
+**Important**: You must have a `siteId` before calling any of these. Use `ListWixSites` first to resolve the site.
+
 ---
 
 ## GetSiteData

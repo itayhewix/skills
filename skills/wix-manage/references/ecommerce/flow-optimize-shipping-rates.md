@@ -4,10 +4,10 @@ description: Analyzes catalog price distribution and current rate structure to r
 layer: L4
 references:
   - name: "Guardrail: Rate Pricing Sanity"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-rate-pricing-sanity
+    path: ecommerce/guardrail-rate-pricing-sanity.md
     load: true
   - name: "Setup: Shipping Rates"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-shipping-rates
+    path: ecommerce/setup-shipping-rates.md
     load: true
 ---
 # Flow: Optimize Shipping Rates

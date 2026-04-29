@@ -4,7 +4,7 @@ description: Maps the SEASONAL business goal to event-driven revenue KPIs and pr
 layer: L6
 references:
   - name: "Flow: Seasonal Promotion"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-seasonal-promotion
+    path: ecommerce/flow-seasonal-promotion.md
     load: true
 ---
 # Goal: Capitalize on Seasonal Events

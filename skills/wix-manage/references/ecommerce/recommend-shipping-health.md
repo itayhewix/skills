@@ -4,16 +4,16 @@ description: Proactive shipping health audit — analyzes delivery profiles, shi
 layer: R
 references:
   - name: "Guardrail: Shipping Health"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-shipping-health
+    path: ecommerce/guardrail-shipping-health.md
     load: true
   - name: "Goal: Reduce Cart Abandonment"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/goal-reduce-cart-abandonment
+    path: ecommerce/goal-reduce-cart-abandonment.md
     load: false
   - name: "Flow: Fix Shipping Coverage Gaps"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-fix-coverage-gaps
+    path: ecommerce/flow-fix-coverage-gaps.md
     load: false
   - name: "Flow: Add Free Shipping"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-add-free-shipping
+    path: ecommerce/flow-add-free-shipping.md
     load: false
 ---
 # Recommend: Shipping Health

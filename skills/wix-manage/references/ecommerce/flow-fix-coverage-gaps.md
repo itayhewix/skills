@@ -4,10 +4,10 @@ description: Detects active delivery regions with zero shipping options and crea
 layer: L4
 references:
   - name: "Guardrail: Shipping Health"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-shipping-health
+    path: ecommerce/guardrail-shipping-health.md
     load: true
   - name: "Setup: Shipping Regions"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/setup-shipping-regions
+    path: ecommerce/setup-shipping-regions.md
     load: true
 ---
 # Flow: Fix Shipping Coverage Gaps

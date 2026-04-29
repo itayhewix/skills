@@ -3,213 +3,234 @@ name: "Recommend: Discount Strategy"
 description: Proactive discount recommendation skill — gathers site data, classifies merchant intent into 4 business goals, analyzes catalog, and generates up to 3 actionable discount recommendations across different strategies.
 layer: R
 references:
-  - name: "Goal: Increase Average Order Value"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/goal-increase-aov
+  - name: "API: Discount Recommendations Service"
+    path: ecommerce/api-discount-recommendations.md
     load: true
-  - name: "Goal: Clear Slow-Moving Inventory"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/goal-clear-inventory
-    load: false
-  - name: "Goal: Capitalize on Seasonal Events"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/goal-seasonal-revenue
-    load: false
-  - name: "Goal: Drive Cross-Sells"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/goal-drive-cross-sells
-    load: false
   - name: "Guardrail: Discount Conflicts"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-discount-conflicts
+    path: ecommerce/guardrail-discount-conflicts.md
     load: false
 ---
 # Recommend: Discount Strategy
 
-Use this skill when the merchant asks for discount recommendations, or proactively when analyzing a store's discount opportunities. Follow the steps below in order.
+## EXECUTION RULES — READ BEFORE ANYTHING ELSE
+
+**You are an operator, not a consultant.** When this recipe is activated:
+
+1. **Do NOT produce recommendations before calling the mandatory APIs.** If you skip the API calls and generate advice from assumptions, your output is wrong — even if it sounds reasonable.
+2. **Execute every step in order.** Do not skip steps. Do not merge steps. Do not answer "in the meantime."
+3. **Use ONLY data returned by API calls.** Never substitute reasoning, general knowledge, or doc summaries for live data.
+4. **If a call fails or is blocked, report the exact blocker.** Do not work around it with assumptions.
+5. **All API calls use `CallWixSiteAPI`.** The internal tool names (getSiteData, getCatalogAnalytics, etc.) are NOT directly callable. You must use `CallWixSiteAPI` with the correct URL, method, and body as shown in each step.
+
+---
+
+## Step 0: Resolve the target site
+
+**MANDATORY — do this first.**
+
+If you don't already have a `siteId`, call `ListWixSites` to find it.
+
+If the merchant mentioned a site name, match it. If only one site exists, auto-select it. Store the `siteId` — every subsequent API call requires it.
+
+**Do not proceed without a siteId.**
 
 ---
 
 ## Step 1: Validate the request
 
-Before doing anything, check if the merchant's request is within scope. **Reject** these and explain why:
+Check if the merchant's request is within scope. **Reject** these:
 
-| Unsupported request | Why | Suggest instead |
-|---|---|---|
-| Free shipping | Not a discount — it's a shipping configuration | Use the "Flow: Add Free Shipping" skill |
-| Buy one get one (BOGO) | Not supported by the Discount Rules API | Explain limitation |
-| Fixed-price bundles ("3 for $100") | Requires custom pricing logic, not discount rules | Explain limitation |
-| Unrelated to discounts | Out of scope | Decline politely |
+| Unsupported request | Suggest instead |
+|---|---|
+| Free shipping | "Flow: Add Free Shipping" skill |
+| Buy one get one (BOGO) | Explain: not supported by Discount Rules API |
+| Fixed-price bundles ("3 for $100") | Explain: requires custom pricing logic |
+| Unrelated to discounts | Decline politely |
 
-If the request is valid, continue to Step 2.
+If valid, continue.
 
 ---
 
 ## Step 2: Gather site data
 
-Call `getSiteData` with these parameters:
-- **fields**: `country`, `businessType`, `industry`, `visitors`, `revenue`, `ordersCount`, `currency`, `language`
-- **include**: `currentDiscounts`, `AOV`, `discountMargin`
+**MANDATORY API CALL — do not skip.**
 
-You need these values for the rest of the skill:
+Call `CallWixSiteAPI` with:
 
-| Value | Where it comes from | What it's used for |
-|---|---|---|
-| AOV | revenue / ordersCount | Setting minSubTotal thresholds |
-| discountMargin | Site setting, default 25% | Maximum allowed discount percentage |
-| currentDiscounts | Active discount rules | Conflict detection |
-| country | Site settings | Holiday detection, localization |
-| currency | Site settings | Price formatting in recommendation names |
-| language | Site settings | Translating recommendation names and descriptions |
+```
+url: https://manage.wix.com/recommendations/v1/recommendations/get-site-data-tool
+method: POST
+siteId: <siteId from Step 0>
+body: {
+  "fields": ["country", "businessType", "industry", "visitors", "revenue", "ordersCount", "currency", "language"],
+  "include": ["currentDiscounts", "AOV", "discountMargin"]
+}
+```
 
-**Validation**: If `country`, `industry`, or `revenue` are missing or null, stop and report the issue. You cannot generate reliable recommendations without these.
+**You need these values from the response:**
+
+| Value | What it's used for |
+|---|---|
+| `aov` | Setting minSubTotal thresholds |
+| `discountMargin` | Max allowed discount (decimal, e.g., 0.25 = 25%) |
+| `currentDiscounts` | Conflict detection |
+| `country` | Holiday detection |
+| `currency` | Price formatting |
+| `language` | Translating recommendation names |
+
+**STOP if `country`, `industry`, or `revenue` are missing or null.** Report: "Cannot generate recommendations — missing required site data: {fields}."
 
 ---
 
 ## Step 3: Classify the merchant's intent
 
-Determine which business goal best matches what the merchant wants:
+Determine the business goal:
 
-| Goal | Trigger phrases | What it optimizes |
-|---|---|---|
-| **UPSELL_BOOST** | "increase AOV", "spend more", "upsell", "order value", "bigger orders" | Average order value |
-| **BUNDLE_AND_SAVE** | "bundle", "cross-sell", "buy together", "multi-buy", "product discovery" | Items per order |
-| **STOCK_MOVER** | "clear inventory", "overstock", "dead stock", "clearance", "old inventory" | Inventory turnover |
-| **SEASONAL** | Holiday names, date references, "seasonal", "sale event", "Black Friday" | Event-driven revenue |
+| Goal | Trigger phrases |
+|---|---|
+| **UPSELL_BOOST** | "increase AOV", "spend more", "upsell", "order value" |
+| **BUNDLE_AND_SAVE** | "bundle", "cross-sell", "buy together", "multi-buy" |
+| **STOCK_MOVER** | "clear inventory", "overstock", "dead stock", "clearance" |
+| **SEASONAL** | Holiday names, dates, "seasonal", "sale event" |
 
-**Rules**:
-- If the request clearly matches one goal, use that goal as the primary strategy
-- If the request is ambiguous or generic (e.g., "give me discount ideas"), default to `UPSELL_BOOST`
-- If it's a follow-up request ("try again", "give me another"), reuse the previous goal but generate a different recommendation
+If ambiguous, default to `UPSELL_BOOST`.
 
-Also extract from the merchant's input:
-- **Keywords**: Product names, brand names, specific terms (e.g., "t-shirts", "electronics")
-- **Category suggestions**: Only if the merchant explicitly says "category" (e.g., "discount on the Shoes category")
-- **Date range**: Start/end dates for time-limited campaigns. Map holidays to actual dates. If no dates specified but a major holiday is within 30 days, detect it proactively.
+Extract from input: **keywords** (product/brand names), **category suggestions** (only if merchant says "category"), **date range** (map holidays to dates).
 
 ---
 
-## Step 4: Determine discount mechanism — Automatic Discount or Coupon
+## Step 4: Determine mechanism — Automatic Discount or Coupon
 
-Before analyzing the catalog, decide whether to create an **automatic discount** or a **coupon**. These are two different Wix features with different APIs and behavior.
+| Merchant says | Mechanism |
+|---|---|
+| "sale", "promotion", "discount for everyone" | **Automatic** |
+| "coupon", "code", "promo code", "voucher" | **Coupon** |
+| "discount for subscribers", "influencer code" | **Coupon** |
+| Unclear | **Ask the merchant** |
 
-| Mechanism | How it works | Best for |
-|---|---|---|
-| **Automatic Discount** | Applies at checkout without customer action | Sales, seasonal promotions, upsell thresholds, site-wide discounts |
-| **Coupon** | Requires customer to enter a code | Email campaigns, influencer partnerships, loyalty rewards, targeted offers |
-
-### Decision logic
-
-| Merchant says | Mechanism | Why |
-|---|---|---|
-| "sale", "promotion", "discount for everyone" | Automatic Discount | Applies to all customers |
-| "coupon", "code", "promo code", "voucher" | Coupon | Explicitly requested code-based |
-| "discount for subscribers", "influencer code", "loyalty reward" | Coupon | Needs attribution or audience targeting |
-| "20% off electronics" (no code/coupon mention) | **Ask the merchant** | Intent is ambiguous |
-
-**If intent is unclear, ask**: "Would you like this to apply automatically to everyone at checkout, or as a coupon code that customers enter? Automatic discounts are great for site-wide sales; coupons work better for targeted campaigns where you want to track which channel drove the purchase."
-
-### Impact on recommendations
-
-- If **Automatic Discount**: Use the Discount Rules API. Set `advice.action` to `apply_discount`. Include in `advice.params`: `mechanism: "AUTOMATIC"`.
-- If **Coupon**: Use the Coupons API. Set `advice.action` to `apply_coupon`. Include in `advice.params`: `mechanism: "COUPON"`, plus `code` (suggested coupon code), `usageLimit` (total uses), and `limitPerCustomer`.
-
-### Stacking warning
-
-If the store already has active automatic discounts AND you're creating a coupon (or vice versa), warn the merchant: "You have active automatic discounts. A coupon will stack on top of them — customers using the code will get both discounts applied."
+**If unclear, ask:** "Would you like this to apply automatically to everyone, or as a coupon code?"
 
 ---
 
 ## Step 5: Analyze the catalog
 
-Run these two calls **concurrently** (in parallel):
+**MANDATORY API CALLS — do not skip. Call both concurrently.**
 
-**Call 1 — getCatalogAnalytics**:
+### Call 1: GetCatalogAnalytics
 
-Use aggregates based on the primary goal:
+Call `CallWixSiteAPI` with:
 
-| Goal | Aggregates to request |
+```
+url: https://manage.wix.com/recommendations/v1/recommendations/get-catalog-analytics-tool
+method: POST
+siteId: <siteId>
+body: {
+  "aggregates": <see table below>,
+  "minMarginPct": 0.15
+}
+```
+
+**Aggregates by goal:**
+
+| Goal | `aggregates` array |
 |---|---|
-| UPSELL_BOOST | `count`, `quantiles([0.5,0.75,0.9], price)`, `avg(profitMargin)` |
-| BUNDLE_AND_SAVE | `min(price)`, `max(price)`, `avg(profitMargin)`, `count` |
-| STOCK_MOVER | `sum(quantity)`, `sum(ordersCount)`, `avg(profitMargin)` |
-| SEASONAL | `sum(ordersCount)`, `quantiles([0.5,0.9], price)`, `avg(profitMargin)` |
+| UPSELL_BOOST | `[{"op":"COUNT","field":"PRICE"}, {"op":"QUANTILES","field":"PRICE","q":[0.5,0.75,0.9]}, {"op":"AVG","field":"PROFIT_MARGIN"}]` |
+| BUNDLE_AND_SAVE | `[{"op":"MIN","field":"PRICE"}, {"op":"MAX","field":"PRICE"}, {"op":"AVG","field":"PROFIT_MARGIN"}, {"op":"COUNT","field":"PRICE"}]` |
+| STOCK_MOVER | `[{"op":"SUM","field":"QUANTITY"}, {"op":"SUM","field":"ORDERS_COUNT"}, {"op":"AVG","field":"PROFIT_MARGIN"}]` |
+| SEASONAL | `[{"op":"SUM","field":"ORDERS_COUNT"}, {"op":"QUANTILES","field":"PRICE","q":[0.5,0.9]}, {"op":"AVG","field":"PROFIT_MARGIN"}]` |
 
-**Call 2 — getProductCatalogData**:
+### Call 2: GetProductCatalogData
 
-| Goal | Sort order | Max items |
-|---|---|---|
-| UPSELL_BOOST | price DESC, ordersCount DESC | 30 |
-| BUNDLE_AND_SAVE | price DESC, ordersCount DESC | 30 |
-| STOCK_MOVER | quantity DESC, ordersCount ASC | 30 |
-| SEASONAL | ordersCount DESC | 30 |
+Call `CallWixSiteAPI` with:
 
-Pass `keywords` to the `query` parameter and `categorySuggestions` to `categoryNames` if the merchant specified them. Always exclude "All Products" from category filters.
+```
+url: https://manage.wix.com/recommendations/v1/recommendations/get-product-catalog-data-tool
+method: POST
+siteId: <siteId>
+body: {
+  "businessGoal": "<goal from Step 3>",
+  "minMarginPct": 0.15,
+  "catalogLimit": 30,
+  "query": "<keywords from Step 3, or empty string>",
+  "categoryNames": <category suggestions from Step 3, or empty array>
+}
+```
 
-**If both calls fail**: Skip to Step 5 using the low-data fallback path.
-**If only getProductCatalogData fails**: Proceed with analytics data. Use category names from analytics to call `getCategoryIds`.
+### Failure handling
+
+- **Both calls fail**: Fall back to SITE scope with 5-10% discount using only site data from Step 2.
+- **Only GetProductCatalogData fails**: Use category names from analytics → call GetCategoryIds (Step 5b).
+- **Only GetCatalogAnalytics fails**: Use product data to identify opportunities.
+
+### Step 5b: Convert category names to GUIDs (if using CATEGORY scope)
+
+**MANDATORY before outputting any categoryIds.**
+
+Call `CallWixSiteAPI` with:
+
+```
+url: https://manage.wix.com/recommendations/v1/recommendations/get-category-ids-tool
+method: POST
+siteId: <siteId>
+body: {
+  "categoryNames": ["<category name from analytics>"]
+}
+```
+
+If response returns empty `categoryIds`: fall back to SITE scope.
 
 ---
 
 ## Step 6: Generate up to 3 recommendations
 
-Generate **up to 3 recommendations**. Each one MUST use a **different strategy** — do not repeat the same approach.
+**Only now — after Steps 0-5 have returned data — generate recommendations.**
 
-### How to pick the 3 strategies
+Each recommendation MUST use a **different strategy**:
 
-Look at the data and find the best opportunities:
+1. **If AOV data available** → UPSELL_BOOST (minSubTotal above AOV)
+2. **If slow movers found** (high quantity, low ordersCount) → STOCK_MOVER
+3. **If holiday within 30 days** → SEASONAL
+4. **If many low-priced items** → BUNDLE_AND_SAVE
+5. **Fallback** → conservative SITE-scope
 
-1. **If AOV data is available** → include an UPSELL_BOOST recommendation (minSubTotal above AOV)
-2. **If inventory shows slow movers** (high quantity, low ordersCount) → include a STOCK_MOVER recommendation
-3. **If a holiday is within 30 days** OR merchant mentioned seasonal context → include a SEASONAL recommendation
-4. **If catalog has many low-priced items** → include a BUNDLE_AND_SAVE recommendation
-5. **If none of the above stand out** → include a conservative SITE-scope recommendation
+Return fewer than 3 if data doesn't support more.
 
-Return fewer than 3 if the data doesn't support more. Do not pad with weak recommendations.
+### Scope selection
 
-### Scope selection for each recommendation
+1. **CATEGORY** (preferred): High-opportunity category from analytics. Must have GUID from GetCategoryIds.
+2. **ITEMS** (specific): Individual products from catalog data. Max 5 product IDs.
+3. **SITE** (fallback): When no clear category/product opportunity.
 
-1. **CATEGORY** (preferred): When analytics clearly identify a high-performing or high-opportunity category. **You must call `getCategoryIds`** to convert the category name to a GUID before using it.
-2. **ITEMS** (specific): When particular products stand out (slow movers, high-margin outliers). Maximum 5 product IDs.
-3. **SITE** (broad): When the store needs overall traffic conversion or for store-wide seasonal events.
+### Performance signals
 
-### Low-data fallback
-
-When data is sparse (few orders, limited analytics):
-1. First try: CATEGORY scope with 10-15% discount on the highest-margin category
-2. If no category data: SITE scope with 5-10% discount
-3. Use catalog price quantiles as AOV proxy if revenue data is unavailable
-
-### Performance-based signals
-
-| What you observe | What to include |
+| What you observe in the data | What to recommend |
 |---|---|
-| High visitors, low ordersCount | A site-wide recommendation to test broad conversion |
-| Low visitors, low revenue | Conservative site-wide (5-10%) to avoid margin erosion |
-| High AOV, few items per order | Prioritize a BUNDLE_AND_SAVE recommendation |
-| Many products with high stock + low orders | Prioritize a STOCK_MOVER recommendation |
-| Holiday within 30 days | Include a SEASONAL recommendation |
+| High visitors, low ordersCount | Site-wide discount to convert traffic |
+| High AOV, few items per order | BUNDLE_AND_SAVE |
+| Products with high stock + low orders | STOCK_MOVER |
+| Holiday within 30 days | SEASONAL |
 
 ---
 
 ## Step 7: Validate before returning
 
-Before finalizing, run these checks on each recommendation:
-
-1. **Conflict check**: Query both active discount rules AND active coupons. If any existing promotion targets the same scope, warn about stacking risk — especially cross-mechanism stacking (automatic + coupon).
-2. **Margin check**: No recommendation should exceed the discountMargin cap (default 25%) unless the merchant explicitly asked for a higher value.
-3. **Strategy uniqueness**: Each of the 3 recommendations must use a different strategy type.
-4. **Mechanism consistency**: Verify the mechanism (automatic/coupon) matches the merchant's intent from Step 4.
-5. **ID validity**: All category IDs must be GUIDs from `getCategoryIds`, not category names. All product IDs must come from `getProductCatalogData`.
-6. **Discount values**: Round to clean increments (5%, 10%, 15%, 20%, 25%) unless the merchant specified an exact value.
+1. **Conflict check**: Do existing active discounts/coupons overlap with your recommendation scope? Warn about stacking.
+2. **Margin check**: Discount must not exceed `discountMargin` from Step 2 (unless merchant overrides).
+3. **Strategy uniqueness**: Each recommendation uses a different strategy.
+4. **Mechanism match**: Automatic or Coupon per Step 4.
+5. **ID validity**: All categoryIds are GUIDs from GetCategoryIds. All productIds are from GetProductCatalogData.
+6. **Rounding**: Discount percentages round to 5/10/15/20/25% unless merchant specified exact value.
 
 ---
 
 ## Output format
-
-Return a JSON object with a `recommendations` array. Each recommendation follows this structure:
 
 ```json
 {
   "recommendations": [
     {
       "title": "15% Off Electronics — Orders Over $200",
-      "reasoning": "AOV is $165. Setting $200 threshold incentivizes adding one more item. Electronics has 42% margin — ideal for this discount.",
+      "reasoning": "AOV is $165 (from GetSiteData). Electronics avg margin 42% (from GetCatalogAnalytics). Setting $200 threshold incentivizes adding one more item.",
       "domain": "discounts",
       "urgency": "HIGH | MEDIUM | LOW",
       "advice": {
@@ -220,7 +241,7 @@ Return a JSON object with a `recommendations` array. Each recommendation follows
           "categoryIds": [],
           "productIds": [],
           "name": "Spend More, Save More",
-          "why": "Rewards orders above your $165 average with 15% off, driving higher cart values.",
+          "why": "Rewards orders above your $165 average with 15% off.",
           "discountType": "PERCENTAGE",
           "discount": 15,
           "code": "",
@@ -244,28 +265,21 @@ Return a JSON object with a `recommendations` array. Each recommendation follows
 
 | Field | Rule |
 |---|---|
-| `title` | Short, actionable. Max 200 chars. Combine scope + discount + goal. Always English. |
-| `reasoning` | Data-backed explanation. Include specific numbers. Always English. |
-| `domain` | Always `"discounts"` |
-| `urgency` | `HIGH` (merchant explicitly asked, or high-revenue store), `MEDIUM` (good opportunity), `LOW` (optimization) |
-| `name` | Marketing headline, 2-5 words. **Translate to the site's `language`** if not English. |
-| `why` | 1-2 sentences explaining the business opportunity. Include specific data points (AOV, margin %, stock levels). **Translate to the site's `language`** if not English. |
-| `mechanism` | `AUTOMATIC` (Discount Rules API) or `COUPON` (Coupons API). Determined in Step 4. |
-| `discountType` | `PERCENTAGE`, `FIXED_AMOUNT`, or `FIXED_PRICE` |
-| `discount` | Integer for percentage (1-100), decimal string for fixed amounts |
-| `code` | Coupon code string. Only for `mechanism: "COUPON"`. Empty string for automatic. Suggest a memorable, brand-relevant code (e.g., "SUMMER25", "SAVE15"). |
-| `usageLimit` | Total number of times the coupon can be used. Only for coupons. `0` = unlimited. |
-| `limitPerCustomer` | Max uses per customer. Only for coupons. `0` = unlimited. |
-| `conditions` | Set to `0` or `""` for fields that don't apply to this recommendation |
-| `scope` + IDs | Mutually exclusive: SITE = both empty, CATEGORY = categoryIds only (max 3), ITEMS = productIds only (max 5) |
+| `title` | Short, actionable. Max 200 chars. Always English. |
+| `reasoning` | **Must reference which API call returned the data.** Always English. |
+| `mechanism` | `AUTOMATIC` or `COUPON`. From Step 4. |
+| `name` | Marketing headline, 2-5 words. Translate to site `language` if not English. |
+| `why` | 1-2 sentences with specific data points from API responses. Translate to site `language`. |
+| `code` | Only for COUPON. Memorable code, max 20 chars (e.g., "SAVE15"). |
+| `scope` + IDs | Mutually exclusive: SITE = both empty, CATEGORY = categoryIds only (max 3), ITEMS = productIds only (max 5). |
 
 ---
 
 ## Constraints
 
-- Maximum 3 recommendations per invocation
-- Each recommendation must use a different strategy
-- Do not recommend discounts on scopes that already have active discounts (unless merchant explicitly wants to stack)
-- Respect discountMargin cap (default 25%) unless merchant overrides
-- All category IDs must be GUIDs — never output category names as IDs
-- Catalog queries are limited to 30 items
+- Maximum 3 recommendations
+- Each must use a different strategy
+- All data must come from API responses — no assumptions
+- Respect discountMargin cap unless merchant overrides
+- All IDs must be GUIDs from API responses
+- Catalog queries limited to 30 items

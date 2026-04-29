@@ -4,10 +4,10 @@ description: Maps the STOCK_MOVER business goal to inventory turnover KPIs and c
 layer: L6
 references:
   - name: "Flow: Stock Mover Clearance"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-stock-mover
+    path: ecommerce/flow-stock-mover.md
     load: true
   - name: "Guardrail: Margin Protection"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/guardrail-margin-protection
+    path: ecommerce/guardrail-margin-protection.md
     load: false
 ---
 # Goal: Clear Slow-Moving Inventory

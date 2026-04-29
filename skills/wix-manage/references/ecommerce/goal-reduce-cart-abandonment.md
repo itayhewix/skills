@@ -4,13 +4,13 @@ description: Maps checkout abandonment reduction to delivery step conversion KPI
 layer: L6
 references:
   - name: "Flow: Add Free Shipping"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-add-free-shipping
+    path: ecommerce/flow-add-free-shipping.md
     load: true
   - name: "Flow: Fix Shipping Coverage Gaps"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-fix-coverage-gaps
+    path: ecommerce/flow-fix-coverage-gaps.md
     load: true
   - name: "Flow: Optimize Shipping Rates"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-optimize-shipping-rates
+    path: ecommerce/flow-optimize-shipping-rates.md
     load: false
 ---
 # Goal: Reduce Cart Abandonment

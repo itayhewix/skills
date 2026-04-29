@@ -4,7 +4,7 @@ description: Maps the BUNDLE_AND_SAVE business goal to multi-item purchase KPIs 
 layer: L6
 references:
   - name: "Flow: Bundle & Save Campaign"
-    url: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/skills/flow-bundle-and-save
+    path: ecommerce/flow-bundle-and-save.md
     load: true
 ---
 # Goal: Drive Cross-Sells and Product Discovery
