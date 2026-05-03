@@ -1,5 +1,5 @@
 ---
-name: "Flow: Upsell Boost Campaign"
+name: "Flow: Upsell Boost"
 description: Creates a discount campaign to increase average order value by setting minimum subtotal conditions above current AOV. Uses margin-based discount tiers and targets high-margin categories.
 layer: L4
 references:

@@ -6,7 +6,7 @@ references:
   - name: "Flow: Add Free Shipping"
     path: ecommerce/flow-add-free-shipping.md
     load: true
-  - name: "Flow: Fix Shipping Coverage Gaps"
+  - name: "Flow: Fix Coverage Gaps"
     path: ecommerce/flow-fix-coverage-gaps.md
     load: true
   - name: "Flow: Optimize Shipping Rates"

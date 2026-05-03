@@ -1,5 +1,5 @@
 ---
-name: "Flow: Bundle & Save Campaign"
+name: "Flow: Bundle and Save"
 description: Creates a discount campaign promoting product discovery and cross-selling by requiring minimum item quantities. Targets high-margin categories with complementary products.
 layer: L4
 references:

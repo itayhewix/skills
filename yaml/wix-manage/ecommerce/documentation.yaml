@@ -20,7 +20,7 @@ apiDoc:
       tags: [ecommerce, discounts]
     # L3 — Configuration & Setup Skills
     - file: ../../../skills/wix-manage/references/ecommerce/api-discount-recommendations.md
-      title: "API: Discount Recommendations Service"
+      title: "API: Discount Recommendations"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts, api]
     - file: ../../../skills/wix-manage/references/ecommerce/setup-coupons.md
@@ -37,15 +37,15 @@ apiDoc:
       tags: [ecommerce, shipping]
     # L4 — Business Flow Skills (Discount)
     - file: ../../../skills/wix-manage/references/ecommerce/flow-upsell-boost.md
-      title: "Flow: Upsell Boost Campaign"
+      title: "Flow: Upsell Boost"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts]
     - file: ../../../skills/wix-manage/references/ecommerce/flow-bundle-and-save.md
-      title: "Flow: Bundle & Save Campaign"
+      title: "Flow: Bundle and Save"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts]
     - file: ../../../skills/wix-manage/references/ecommerce/flow-stock-mover.md
-      title: "Flow: Stock Mover Clearance"
+      title: "Flow: Stock Mover"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts]
     - file: ../../../skills/wix-manage/references/ecommerce/flow-seasonal-promotion.md
@@ -54,7 +54,7 @@ apiDoc:
       tags: [ecommerce, discounts]
     # L4 — Business Flow Skills (Shipping)
     - file: ../../../skills/wix-manage/references/ecommerce/flow-fix-coverage-gaps.md
-      title: "Flow: Fix Shipping Coverage Gaps"
+      title: "Flow: Fix Coverage Gaps"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, shipping]
     - file: ../../../skills/wix-manage/references/ecommerce/flow-add-free-shipping.md
@@ -88,19 +88,19 @@ apiDoc:
       tags: [ecommerce, shipping]
     # L6 — Business Goals & KPI Skills
     - file: ../../../skills/wix-manage/references/ecommerce/goal-increase-aov.md
-      title: "Goal: Increase Average Order Value"
+      title: "Goal: Increase AOV"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts, goals]
     - file: ../../../skills/wix-manage/references/ecommerce/goal-clear-inventory.md
-      title: "Goal: Clear Slow-Moving Inventory"
+      title: "Goal: Clear Inventory"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts, goals]
     - file: ../../../skills/wix-manage/references/ecommerce/goal-seasonal-revenue.md
-      title: "Goal: Capitalize on Seasonal Events"
+      title: "Goal: Seasonal Revenue"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts, goals]
     - file: ../../../skills/wix-manage/references/ecommerce/goal-drive-cross-sells.md
-      title: "Goal: Drive Cross-Sells and Product Discovery"
+      title: "Goal: Drive Cross-Sells"
       docsEntry: https://dev.wix.com/docs/api-reference/business-solutions/e-commerce
       tags: [ecommerce, discounts, goals]
     - file: ../../../skills/wix-manage/references/ecommerce/goal-reduce-cart-abandonment.md

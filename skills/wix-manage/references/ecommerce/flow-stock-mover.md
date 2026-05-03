@@ -1,5 +1,5 @@
 ---
-name: "Flow: Stock Mover Clearance"
+name: "Flow: Stock Mover"
 description: Creates discount campaigns to clear slow-moving inventory by targeting products with high stock levels and low sales velocity. Uses deeper discounts proportional to inventory urgency.
 layer: L4
 references:

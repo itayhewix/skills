@@ -120,7 +120,7 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 
 #### L3 — Configuration & Setup Skills
 
-### [API: Discount Recommendations Service](references/ecommerce/api-discount-recommendations.md)
+### [API: Discount Recommendations](references/ecommerce/api-discount-recommendations.md)
 **Technical:** Internal API for gathering site data, catalog analytics, product catalog data, and category IDs. Endpoints at manage.wix.com/recommendations. Documents GetSiteData, GetCatalogAnalytics, GetProductCatalogData, and GetCategoryIds with full request/response schemas.
 
 ### [Setup: Coupons](references/ecommerce/setup-coupons.md)
@@ -134,13 +134,13 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 
 #### L4 — Business Flow Skills (Discount)
 
-### [Flow: Upsell Boost Campaign](references/ecommerce/flow-upsell-boost.md)
+### [Flow: Upsell Boost](references/ecommerce/flow-upsell-boost.md)
 **Technical:** Creates discount campaigns to increase AOV using margin-based discount tiers (low/med/high) and minSubTotal conditions. UPSELL_BOOST goal from the discount recommendation pipeline.
 
-### [Flow: Bundle & Save Campaign](references/ecommerce/flow-bundle-and-save.md)
+### [Flow: Bundle and Save](references/ecommerce/flow-bundle-and-save.md)
 **Technical:** Creates discount campaigns promoting cross-selling with minItemQuantity conditions. Targets high-margin categories with complementary products. BUNDLE_AND_SAVE goal.
 
-### [Flow: Stock Mover Clearance](references/ecommerce/flow-stock-mover.md)
+### [Flow: Stock Mover](references/ecommerce/flow-stock-mover.md)
 **Technical:** Creates clearance discount campaigns targeting products with high stock and low sales velocity. Discount depth proportional to inventory urgency. STOCK_MOVER goal.
 
 ### [Flow: Seasonal Promotion](references/ecommerce/flow-seasonal-promotion.md)
@@ -148,7 +148,7 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 
 #### L4 — Business Flow Skills (Shipping)
 
-### [Flow: Fix Shipping Coverage Gaps](references/ecommerce/flow-fix-coverage-gaps.md)
+### [Flow: Fix Coverage Gaps](references/ecommerce/flow-fix-coverage-gaps.md)
 **Technical:** Detects active delivery regions with zero shipping options and creates standard shipping. Cross-references delivery profiles with shipping options to find checkout-blocking gaps.
 
 ### [Flow: Add Free Shipping](references/ecommerce/flow-add-free-shipping.md)
@@ -176,16 +176,16 @@ These recipes do NOT cover frontend development or SDK usage for displaying data
 
 #### L6 — Business Goals & KPI Skills
 
-### [Goal: Increase Average Order Value](references/ecommerce/goal-increase-aov.md)
+### [Goal: Increase AOV](references/ecommerce/goal-increase-aov.md)
 **Technical:** UPSELL_BOOST business goal — maps to AOV KPIs and upsell/bundle flows with margin-based discount tiers and minSubTotal strategy.
 
-### [Goal: Clear Slow-Moving Inventory](references/ecommerce/goal-clear-inventory.md)
+### [Goal: Clear Inventory](references/ecommerce/goal-clear-inventory.md)
 **Technical:** STOCK_MOVER business goal — maps to inventory turnover KPIs and clearance discount flows targeting high-stock/low-velocity products.
 
-### [Goal: Capitalize on Seasonal Events](references/ecommerce/goal-seasonal-revenue.md)
+### [Goal: Seasonal Revenue](references/ecommerce/goal-seasonal-revenue.md)
 **Technical:** SEASONAL business goal — maps to event-driven revenue KPIs with proactive holiday detection within 30 days and campaign window calculation.
 
-### [Goal: Drive Cross-Sells and Product Discovery](references/ecommerce/goal-drive-cross-sells.md)
+### [Goal: Drive Cross-Sells](references/ecommerce/goal-drive-cross-sells.md)
 **Technical:** BUNDLE_AND_SAVE business goal — maps to items-per-order KPIs and bundling flows promoting product discovery and multi-item purchases.
 
 ### [Goal: Reduce Cart Abandonment](references/ecommerce/goal-reduce-cart-abandonment.md)

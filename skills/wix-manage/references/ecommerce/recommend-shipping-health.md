@@ -9,7 +9,7 @@ references:
   - name: "Goal: Reduce Cart Abandonment"
     path: ecommerce/goal-reduce-cart-abandonment.md
     load: false
-  - name: "Flow: Fix Shipping Coverage Gaps"
+  - name: "Flow: Fix Coverage Gaps"
     path: ecommerce/flow-fix-coverage-gaps.md
     load: false
   - name: "Flow: Add Free Shipping"

@@ -1,5 +1,5 @@
 ---
-name: "Flow: Fix Shipping Coverage Gaps"
+name: "Flow: Fix Coverage Gaps"
 description: Detects active delivery regions with zero shipping options and creates standard shipping for them. Cross-references delivery profiles with shipping options to find regions where customers cannot complete checkout.
 layer: L4
 references:

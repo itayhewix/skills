@@ -1,5 +1,5 @@
 ---
-name: "Goal: Capitalize on Seasonal Events"
+name: "Goal: Seasonal Revenue"
 description: Maps the SEASONAL business goal to event-driven revenue KPIs and promotional flows.
 layer: L6
 references:

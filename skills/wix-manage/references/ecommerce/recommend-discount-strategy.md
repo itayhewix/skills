@@ -3,7 +3,7 @@ name: "Recommend: Discount Strategy"
 description: Proactive discount recommendation skill — gathers site data, classifies merchant intent into 4 business goals, analyzes catalog, and generates up to 3 actionable discount recommendations across different strategies.
 layer: R
 references:
-  - name: "API: Discount Recommendations Service"
+  - name: "API: Discount Recommendations"
     path: ecommerce/api-discount-recommendations.md
     load: true
   - name: "Guardrail: Discount Conflicts"
